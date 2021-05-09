@@ -9,8 +9,7 @@
 // ustawiona na 0). Program początkowy robów i spis dostępnych
 // programów powinien być słowem, w którym litery należą do zbioru
 // {l, p, i, w, j}. Dodatkowo w spisie nie litery nie powinny się
-// powtarzać, a litery z początkowego programu powinny znaleźć się
-// spisie. Prawdopodobieństwa i ułamek energii rodzica powinny być
+// powtarzać. Prawdopodobieństwa i ułamek energii rodzica powinny być
 // liczbą zmiennoprzecinkową z przedziału [0; 1], pisaną z kropką
 // (np. 0.53). Jeśli któryś z powyższych warunków nie zostanie
 // spełniony symulacja nie wykona się (liczba tur zostanie ustawiona

@@ -42,6 +42,54 @@ public class Parametry {
     public double prZmianyInstrukcji() { return parametryNiecałkowite[3]; }
     public double ułamekEnergiiRodzica() { return parametryNiecałkowite[0]; }
 
+    // funkcja sprawdza, czy litery w spisie nie powtarzają się oraz czy litery w
+    // spisie i początkowym programie należą do zbioru {l, p, i, w, j}.
+    private boolean czyPoprawneInstrukcje() {
+        for (int i = 0; i < długośćProgramu; i++) {
+            if (program.charAt(i) != 'l' && program.charAt(i) != 'p' && program.charAt(i) != 'i' &&
+                    program.charAt(i) != 'w' && program.charAt(i) != 'j') {
+                return false;
+            }
+        }
+        if (długośćSpisu > 5) {
+            return false;
+        }
+        boolean czyWystąpiło[] = {false, false, false, false, false}; // odpowiednio litery: l, p, i, w, j
+        for (int i = 0; i < długośćSpisu; i++) {
+            if (spis.charAt(i) == 'l') {
+                if (czyWystąpiło[0]) {
+                    return false;
+                }
+                czyWystąpiło[0] = true;
+            }
+            if (spis.charAt(i) == 'p') {
+                if (czyWystąpiło[1]) {
+                    return false;
+                }
+                czyWystąpiło[1] = true;
+            }
+            if (spis.charAt(i) == 'i') {
+                if (czyWystąpiło[2]) {
+                    return false;
+                }
+                czyWystąpiło[2] = true;
+            }
+            if (spis.charAt(i) == 'w') {
+                if (czyWystąpiło[3]) {
+                    return false;
+                }
+                czyWystąpiło[3] = true;
+            }
+            if (spis.charAt(i) == 'j') {
+                if (czyWystąpiło[4]) {
+                    return false;
+                }
+                czyWystąpiło[4] = true;
+            }
+        }
+        return true;
+    }
+
     public Parametry(File parametryCałkowitePlik) {
         Arrays.fill(parametryCałkowite, -1);
         Arrays.fill(parametryNiecałkowite, -1.);
@@ -66,6 +114,9 @@ public class Parametry {
                 }
                 if (numerParametru <= 8) {
                     int wartość = czytajLinię.nextInt();
+                    if (wartość < 0) {
+                        throw new NiepoprawneDane("Ujemna wartość parametru.");
+                    }
                     if (parametryCałkowite[numerParametru] != -1) {
                         throw new NiepoprawneDane("Parametr powtarza się.");
                     }
@@ -90,6 +141,10 @@ public class Parametry {
                 }
                 else { // numerParametru <= 14
                     double wartość = czytajLinię.nextDouble();
+                    if (wartość < 0 || wartość > 1) {
+                        throw new NiepoprawneDane("Niepoprawna wartość prawdopodobieństwa" +
+                                " lub ułamku energii rodzica (należy podać wartość z przedziału [0; 1]).");
+                    }
                     if (parametryNiecałkowite[numerParametru - 11] != -1.) {
                         throw new NiepoprawneDane("Parametr powtarza się.");
                     }
@@ -101,16 +156,20 @@ public class Parametry {
             if (liczbaWierszy != parametrySpis.length) {
                 throw new NiepoprawneDane("Niepoprawna liczba parametrów.");
             }
+            if (!czyPoprawneInstrukcje()) {
+                throw new NiepoprawneDane("Niepoprawna litera w początkowym" +
+                        "programie robów.");
+            }
         } catch (FileNotFoundException e) {
-            System.out.println("Nie znaleziono pliku z parametrami. " +
+            System.out.println("Nie znaleziono pliku z parametrami.\n" +
                     "Liczba tur ustawiona na 0. Symulacja nie wykona się.");
             parametryCałkowite[0] = 0;
         } catch (NiepoprawneDane e) {
-            System.out.println(e.getMessage() + " Liczba tur ustawiona na 0. " +
+            System.out.println(e.getMessage() + "\nLiczba tur ustawiona na 0. " +
                     "Symulacja nie wykona się.");
             parametryCałkowite[0] = 0;
         } catch (InputMismatchException e) {
-        System.out.println("Niepoprawny typ parametru. Liczba tur ustawiona na 0. " +
+        System.out.println("Niepoprawny typ parametru.\nLiczba tur ustawiona na 0. " +
                 "Symulacja nie wykona się.");
         parametryCałkowite[0] = 0;
     }
