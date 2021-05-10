@@ -31,15 +31,27 @@
 import java.io.File;
 
 public class Symulacja {
+    private static int numerTury = 0;
+    private static int ileTur;
+    private static Plansza plansza;
+
+    private static void uzupełnijDane(File planszaPlik, File parametryPlik) {
+        Parametry parametry = new Parametry(parametryPlik);
+        parametry.wypiszParametry();
+
+        int ileDajeJedzenie = parametry.ileDajeJedzenie();
+        int ileRośnieJedzenie = parametry.ileRośnieJedzenie();
+        plansza = new Plansza(planszaPlik, ileDajeJedzenie, ileRośnieJedzenie);
+        plansza.wypiszPlanszę();
+
+        ileTur = parametry.ileTur();
+    }
+
     public static void main(String[] args) {
         try {
             File planszaPlik = new File(args[0]);
-            Plansza plansza = new Plansza(planszaPlik);
-            plansza.wypiszPlanszę();
-
             File parametryPlik = new File(args[1]);
-            Parametry parametry = new Parametry(parametryPlik);
-            parametry.wypiszParametry();
+            uzupełnijDane(planszaPlik, parametryPlik);
 
             if (args.length > 2) {
                 throw new NiepoprawneDane("Wprowadzono więcej niż 2 argumenty kompilacji." +

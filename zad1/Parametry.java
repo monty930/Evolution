@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+// klasa obsługująca podane w pliku parametry. Sprawdza ich poprawność i
+// przechowuje ich wartości.
 public class Parametry {
     private final String[] parametrySpis =
             {"ile_tur", "pocz_ile_robów", "pocz_energia", "ile_daje_jedzenie",
@@ -29,10 +31,10 @@ public class Parametry {
     public int ileTur() { return parametryCałkowite[0]; }
     public int początkowaLiczbaRobów() { return parametryCałkowite[1]; }
     public int początkowaEnergia() { return parametryCałkowite[2]; }
-    public int ileEnergiiDajeJedzenie() { return parametryCałkowite[3]; }
-    public int ile_rośnie_jedzenie() { return parametryCałkowite[4]; }
-    public int koszt_tury() { return parametryCałkowite[5]; }
-    public int pr_powielenia() { return parametryCałkowite[6]; }
+    public int ileDajeJedzenie() { return parametryCałkowite[3]; }
+    public int ileRośnieJedzenie() { return parametryCałkowite[4]; }
+    public int kosztTury() { return parametryCałkowite[5]; }
+    public int prPowielenia() { return parametryCałkowite[6]; }
     public int limitPowielania() { return parametryCałkowite[7]; }
     public int coIleWypisz() { return parametryCałkowite[8]; }
     public String początkowyProgram() { return program; }
@@ -54,7 +56,7 @@ public class Parametry {
         if (długośćSpisu > 5) {
             return false;
         }
-        boolean czyWystąpiło[] = {false, false, false, false, false}; // odpowiednio litery: l, p, i, w, j
+        boolean[] czyWystąpiło = {false, false, false, false, false}; // odpowiednio litery: l, p, i, w, j
         for (int i = 0; i < długośćSpisu; i++) {
             if (spis.charAt(i) == 'l') {
                 if (czyWystąpiło[0]) {
@@ -90,6 +92,7 @@ public class Parametry {
         return true;
     }
 
+    // konstruktor. pobieranie danych z pliku
     public Parametry(File parametryCałkowitePlik) {
         Arrays.fill(parametryCałkowite, -1);
         Arrays.fill(parametryNiecałkowite, -1.);

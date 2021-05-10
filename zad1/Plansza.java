@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Plansza {
+    // plansza domyślna używana w przypadku błędnych danych lub braku danych w pliku
     static final ArrayList<char[]> planszaDomyślna = new ArrayList<>() {{
         add(new char[]{' ', 'x', ' ', 'x', '\n'});
         add(new char[]{'x', ' ', 'x', ' ', '\n'});
@@ -19,7 +20,7 @@ public class Plansza {
         return liczbaWierszy;
     }
 
-    public Plansza(File planszaPlik) {
+    public Plansza(File planszaPlik, int ileDajeJedzenie, int ileRośnieJedzenie) {
         try {
             Scanner czytajPlanszę = new Scanner(planszaPlik);
 
