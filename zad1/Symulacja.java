@@ -48,6 +48,7 @@ public class Symulacja {
     }
 
     public static void main(String[] args) {
+        // wczytywanie danych
         try {
             File planszaPlik = new File(args[0]);
             File parametryPlik = new File(args[1]);

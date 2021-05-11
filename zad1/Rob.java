@@ -1,7 +1,7 @@
 import java.util.Random;
 
-public class Rob {
-    /*private int numerInstrukcji = 0;
+public class Rob extends GatunekRob {
+    private int numerInstrukcji = 0;
     private int kierunek; // 0 - północ, 1 - wschód, 2 - południe, 3 - zachód
     private int energia;
     private String program;
@@ -9,14 +9,21 @@ public class Rob {
     private int współrzędnaX;
     private int współrzędnaY;
     private Plansza plansza;
+    private int kosztTury;
+    private int limitPowielania;
+    private double prPowielenia;
 
     public boolean czyŻywy() {
         return czyŻywy;
     }
 
-    public Rob(int energia, String program, Plansza plansza) {
+    public Rob(int energia, String program, Plansza plansza,
+               int kosztTury, int limitPowielania, double prPowielenia) {
         this.program = program;
         this.energia = energia;
+        super.kosztTury(kosztTury);
+        //this.limitPowielania = limitPowielania;
+        //this. prPowielenia = prPowielenia;
         if (this.energia <= 0) {
             this.czyŻywy = false;
         }
@@ -61,7 +68,8 @@ public class Rob {
                     spis.charAt(numerNowejInstrukcji) +
                     nowyProgram.substring(numerStarejInstrukcji + 1);
         }
-        return new Rob(energiaNowegoRoba, nowyProgram, plansza);
+        return new Rob(energiaNowegoRoba, nowyProgram, plansza,
+                        kosztTury, limitPowielania, prPowielenia);
     }
 
     public void lewo() {
@@ -100,7 +108,7 @@ public class Rob {
 
     // metoda zwraca 1 jeśli powstał nowy rob, -1 jeśli obecny rob umarł,
     // 0 w przeciwnym wypadku
-    public int ruch (int kosztTury, int limitPowielania, double prPowielenia) {
+    public int ruch () {
         // spadek energii
         energia -= kosztTury;
         if (energia < 0) {
@@ -125,5 +133,4 @@ public class Rob {
         }
         return 0;
     }
-    */
 }

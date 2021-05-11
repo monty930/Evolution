@@ -109,7 +109,8 @@ public class Parametry {
                 }
                 String parametr = czytajLinię.next();
                 if (!czytajLinię.hasNext()) {
-                    throw new NiepoprawneDane("Nie podano jednego z parametrów: linia " + liczbaWierszy + ".");
+                    throw new NiepoprawneDane("Nie podano jednego z parametrów: linia "
+                            + liczbaWierszy + ".");
                 }
                 int numerParametru = wyszukaj(parametr);
                 if (numerParametru == -1) {
