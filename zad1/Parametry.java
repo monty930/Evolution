@@ -7,10 +7,10 @@ import java.util.*;
 public class Parametry {
     private final String[] parametrySpis =
             {"ile_tur", "pocz_ile_robów", "pocz_energia", "ile_daje_jedzenie",
-                    "ile_rośnie_jedzenie", "koszt_tury", "pr_powielenia",
+                    "ile_rośnie_jedzenie", "koszt_tury",
                     "limit_powielania", "co_ile_wypisz", "pocz_progr",
                     "spis_progr", "ułamek_energii_rodzica", "pr_usunięcia_instr",
-                    "pr_dodania_instr", "pr_zmiany_instr"};
+                    "pr_dodania_instr", "pr_zmiany_instr", "pr_powielenia"};
 
     private int wyszukaj(String parametr) {
         for (int i = 0; i < parametrySpis.length; i++) {
@@ -21,8 +21,8 @@ public class Parametry {
         return -1;
     }
 
-    private final int[] parametryCałkowite = new int[9];
-    private final double[] parametryNiecałkowite = new double[4];
+    private final int[] parametryCałkowite = new int[8];
+    private final double[] parametryNiecałkowite = new double[5];
     private String program;
     private String spis;
     private int długośćSpisu = -1;
@@ -34,14 +34,14 @@ public class Parametry {
     public int ileDajeJedzenie() { return parametryCałkowite[3]; }
     public int ileRośnieJedzenie() { return parametryCałkowite[4]; }
     public int kosztTury() { return parametryCałkowite[5]; }
-    public int prPowielenia() { return parametryCałkowite[6]; }
-    public int limitPowielania() { return parametryCałkowite[7]; }
-    public int coIleWypisz() { return parametryCałkowite[8]; }
+    public int limitPowielania() { return parametryCałkowite[6]; }
+    public int coIleWypisz() { return parametryCałkowite[7]; }
     public String początkowyProgram() { return program; }
-    public String spis_instr() { return spis; }
+    public String spisInstrukcji() { return spis; }
     public double prUsunięciaInstrukcji() { return parametryNiecałkowite[1]; }
     public double prDodaniaInstrukcji() { return parametryNiecałkowite[2]; }
     public double prZmianyInstrukcji() { return parametryNiecałkowite[3]; }
+    public double prPowielenia() { return parametryNiecałkowite[4]; }
     public double ułamekEnergiiRodzica() { return parametryNiecałkowite[0]; }
 
     // funkcja sprawdza, czy litery w spisie nie powtarzają się oraz czy litery w
@@ -103,7 +103,6 @@ public class Parametry {
                 liczbaWierszy++;
                 String linia = czytajParametry.nextLine();
                 Scanner czytajLinię = new Scanner(linia);
-                czytajLinię.useLocale(Locale.US);
                 if (!czytajLinię.hasNext()) {
                     throw new NiepoprawneDane("Jeden z wierszy w pliku z parametrami jest pusty: linia " + liczbaWierszy + ".");
                 }
@@ -116,7 +115,7 @@ public class Parametry {
                 if (numerParametru == -1) {
                     throw new NiepoprawneDane("Błędna nazwa parametru.");
                 }
-                if (numerParametru <= 8) {
+                if (numerParametru <= 7) {
                     int wartość = czytajLinię.nextInt();
                     if (wartość < 0) {
                         throw new NiepoprawneDane("Ujemna wartość parametru.");
@@ -126,9 +125,9 @@ public class Parametry {
                     }
                     parametryCałkowite[numerParametru] = wartość;
                 }
-                else if (numerParametru <= 10) {
+                else if (numerParametru <= 9) {
                     String wartość = czytajLinię.next();
-                    if (numerParametru == 9) {
+                    if (numerParametru == 8) {
                         if (długośćProgramu != -1) {
                             throw new NiepoprawneDane("Parametr powtarza się.");
                         }
@@ -149,10 +148,10 @@ public class Parametry {
                         throw new NiepoprawneDane("Niepoprawna wartość prawdopodobieństwa" +
                                 " lub ułamku energii rodzica (należy podać wartość z przedziału [0; 1]).");
                     }
-                    if (parametryNiecałkowite[numerParametru - 11] != -1.) {
+                    if (parametryNiecałkowite[numerParametru - 10] != -1.) {
                         throw new NiepoprawneDane("Parametr powtarza się.");
                     }
-                    parametryNiecałkowite[numerParametru - 11] = wartość;
+                    parametryNiecałkowite[numerParametru - 10] = wartość;
                 }
                 czytajLinię.close();
             }
@@ -173,7 +172,9 @@ public class Parametry {
                     "Symulacja nie wykona się.");
             parametryCałkowite[0] = 0;
         } catch (InputMismatchException e) {
-        System.out.println("Niepoprawny typ parametru.\nLiczba tur ustawiona na 0. " +
+        System.out.println("Niepoprawny typ parametru. Upewnij się, że parametry" +
+                " zmiennoprzecinkowe (prawdopodobiństwa i ułamki)\nzapisane są w notacji" +
+                " polskiej (z przecinkiem, np 0,55)\nLiczba tur ustawiona na 0. " +
                 "Symulacja nie wykona się.");
         parametryCałkowite[0] = 0;
     }
@@ -184,7 +185,7 @@ public class Parametry {
             System.out.println(parametrySpis[i] + " " + parametryCałkowite[i]);
         }
         for (int j = 0; j < parametryNiecałkowite.length; j++) {
-            System.out.println(parametrySpis[j + 11] + " " + parametryNiecałkowite[j]);
+            System.out.println(parametrySpis[j + 10] + " " + parametryNiecałkowite[j]);
         }
         System.out.println("program: " + program);
         System.out.println("spis: " + spis);

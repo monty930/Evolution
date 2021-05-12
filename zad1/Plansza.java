@@ -3,12 +3,12 @@ import java.util.*;
 
 public class Plansza {
     // plansza domyślna używana w przypadku błędnych danych lub braku danych w pliku
-    static final ArrayList<char[]> planszaDomyślna = new ArrayList<>() {{
-        add(new char[]{' ', 'x', ' ', 'x', '\n'});
-        add(new char[]{'x', ' ', 'x', ' ', '\n'});
-        add(new char[]{' ', 'x', ' ', 'x', '\n'});
+    static final ArrayList<Pole[]> planszaDomyślna = new ArrayList<>() {{
+        add(new Pole[]{new Pole(), new Pole(), new Pole()});
+        add(new Pole[]{new Pole(), new Pole(), new Pole()});
+        add(new Pole[]{new Pole(), new Pole(), new Pole()});
     }};
-    private ArrayList<char[]> plansza = new ArrayList<>();
+    private ArrayList<Pole[]> plansza = new ArrayList<>();
     private int liczbaWierszy = 0;
     private int liczbaKolumn = -1;
 
@@ -18,6 +18,10 @@ public class Plansza {
 
     public int liczbaWierszy() {
         return liczbaWierszy;
+    }
+
+    public Pole pole(int x, int y) {
+        return plansza.get(y)[x];
     }
 
     public Plansza(File planszaPlik, int ileDajeJedzenie, int ileRośnieJedzenie) {
@@ -31,15 +35,18 @@ public class Plansza {
                 if (liczbaKolumn != -1 && liczbaKolumn != linia.length()) {
                     throw new NiepoprawneDane("Niepoprawna liczba znakow w wierszu: " + liczbaWierszy + ".");
                 }
-                plansza.add(new char[linia.length()]);
+                plansza.add(new Pole[linia.length()]);
                 liczbaKolumn = linia.length();
                 for (int i = 0; i < linia.length(); i++) {
                     char znak = linia.charAt(i);
                     if (znak != ' ' && znak != 'x' && znak != '\n') {
                         throw new NiepoprawneDane("Niedozwolony znak w pliku z planszą.");
                     }
-                    if (znak != '\n') {
-                        plansza.get(liczbaWierszy - 1)[i] = znak;
+                    if (znak == 'x') {
+                        plansza.get(liczbaWierszy - 1)[i] = new Pole(ileDajeJedzenie, ileRośnieJedzenie);
+                    }
+                    if (znak == ' ') {
+                        plansza.get(liczbaWierszy - 1)[i] = new Pole(ileDajeJedzenie, ileRośnieJedzenie);
                     }
                 }
             }

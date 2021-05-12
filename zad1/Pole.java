@@ -5,25 +5,32 @@ public class Pole {
     int kiedyZjedzone; // numer tury
 
     public boolean czyMaJedzenie(int numerTury) {
-        if (czyŻywieniowe && kiedyZjedzone + ileRośnieJedzenie >= numerTury) {
-            kiedyZjedzone = numerTury;
-            return true;
-        }
-        return false;
+        return czyŻywieniowe && kiedyZjedzone + ileRośnieJedzenie <= numerTury;
+        //System.out.println("czyŻyw " + czyŻywieniowe + " kiedyZj " + kiedyZjedzone + " ileR " + ileRośnieJedzenie);
     }
 
-    public Pole(int ileDajeJedzenie, int ileRośnieJedzenie, boolean czyŻywieniowe) {
-        this.czyŻywieniowe = czyŻywieniowe;
+    // pole żywieniowe
+    public Pole(int ileDajeJedzenie, int ileRośnieJedzenie) {
+        //System.out.println("iled " + ileDajeJedzenie + " iler " + ileRośnieJedzenie);
+        this.czyŻywieniowe = true;
         kiedyZjedzone = -1 * ileRośnieJedzenie;
         this.ileDajeJedzenie = ileDajeJedzenie;
         this.ileRośnieJedzenie = ileRośnieJedzenie;
+    }
+
+    // pole nieżywieniowe
+    public Pole() {
+        this.czyŻywieniowe = false;
+        kiedyZjedzone = 0;
+        this.ileDajeJedzenie = 0;
+        this.ileRośnieJedzenie = 0;
     }
 
     // Funkcja zwraca ilość energii z zerwanego jedzenia.
     // Jeśli jedzenie jeszcze nie dojrzało lub na tym polu w ogóle
     // nie rośnie jedzenie - funkcja zwraca 0.
     int oddajJedzenie(int numerTury) {
-        if (czyŻywieniowe && kiedyZjedzone + ileRośnieJedzenie >= numerTury) {
+        if (czyŻywieniowe && kiedyZjedzone + ileRośnieJedzenie <= numerTury) {
             kiedyZjedzone = numerTury;
             return ileDajeJedzenie;
         }

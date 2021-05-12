@@ -10,8 +10,8 @@
 // programów powinien być słowem, w którym litery należą do zbioru
 // {l, p, i, w, j}. Dodatkowo w spisie nie litery nie powinny się
 // powtarzać. Prawdopodobieństwa i ułamek energii rodzica powinny być
-// liczbą zmiennoprzecinkową z przedziału [0; 1], pisaną z kropką
-// (np. 0.53). Jeśli któryś z powyższych warunków nie zostanie
+// liczbą zmiennoprzecinkową z przedziału [0; 1], pisaną z przecinkiem
+// (np. 0,53). Jeśli któryś z powyższych warunków nie zostanie
 // spełniony symulacja nie wykona się (liczba tur zostanie ustawiona
 // na 0)
 
@@ -33,18 +33,38 @@ import java.io.File;
 public class Symulacja {
     private static int numerTury = 0;
     private static int ileTur;
-    private static Plansza plansza;
+    private static int coIleWypisz;
+    private static Populacja populacja;
 
     private static void uzupełnijDane(File planszaPlik, File parametryPlik) {
         Parametry parametry = new Parametry(parametryPlik);
-        parametry.wypiszParametry();
+        //parametry.wypiszParametry();
 
-        int ileDajeJedzenie = parametry.ileDajeJedzenie();
-        int ileRośnieJedzenie = parametry.ileRośnieJedzenie();
-        plansza = new Plansza(planszaPlik, ileDajeJedzenie, ileRośnieJedzenie);
-        plansza.wypiszPlanszę();
+        populacja = new Populacja(parametry.początkowaLiczbaRobów(), parametry.kosztTury(),
+                parametry.limitPowielania(), parametry.początkowaEnergia(), parametry.prPowielenia(),
+                parametry.prUsunięciaInstrukcji(), parametry.prDodaniaInstrukcji(), parametry.prZmianyInstrukcji(),
+                parametry.ułamekEnergiiRodzica(), new Plansza(planszaPlik, parametry.ileDajeJedzenie(),
+                parametry.ileRośnieJedzenie()), parametry.spisInstrukcji(), parametry.początkowyProgram());
 
         ileTur = parametry.ileTur();
+        coIleWypisz = parametry.coIleWypisz();
+    }
+
+    public static void symuluj() {
+        if (ileTur == 0) {
+            System.out.println("Zerowa liczba tur. Symulacja nie wykonała się." +
+                    "\nStan symulacji:\nLiczba robów: " + populacja.ileRobów());
+            return;
+        }
+        while (numerTury < ileTur) {
+            numerTury++;
+            if (numerTury % coIleWypisz == 0) {
+                System.out.println("wypisanie stanu symulacji... Tura " + numerTury + " liczba robów: " + populacja.ileRobów());
+            }
+            populacja.Żyj(numerTury);
+        }
+        System.out.println("W sumie urodziło się: " + populacja.ileSięUrodziło() + " robów.");
+        System.out.println("W sumie umarło: " + populacja.ileUmarło() + " robów.");
     }
 
     public static void main(String[] args) {
@@ -65,5 +85,10 @@ public class Symulacja {
         } catch (NiepoprawneDane e) {
             System.out.println(e.getMessage());
         }
+
+        symuluj();
+
+        System.out.println("Powiadomienia o błędach podanych plików lub danych (jeśli wystąpiły)" +
+                " zostały wypisane przed rozpoczęciem symulacji.");
     }
 }
