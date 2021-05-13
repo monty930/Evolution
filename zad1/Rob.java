@@ -1,20 +1,25 @@
 import java.util.Random;
 
-public class Rob extends GatunekRob {
+public class Rob {
+    private final String spisInstrukcji;
+    private final Plansza plansza;
+    private final double ułamekEnergiiRodzica;
+    private final double prZmianyInstrukcji;
+    private final double prDodaniaInstrukcji;
+    private final double prUsunięciaInstrukcji;
+    private final int kosztTury;
+    private final int limitPowielania;
+    private final double prPowielenia;
     private int numerInstrukcji = 0;
     private int kierunek; // 0 - północ, 1 - wschód, 2 - południe, 3 - zachód
     private int energia;
     private final String program;
-    private boolean czyŻywy = true;
     private int współrzędnaX;
     private int współrzędnaY;
+    private boolean zakończonoProgram = false;
 
-    public boolean czyŻywy() {
-        return czyŻywy;
-    }
-
-    public String program() {
-        return program;
+    public boolean zakończonoProgram() {
+        return zakończonoProgram;
     }
 
     // konstruktor pierwotnego praRoba
@@ -23,42 +28,20 @@ public class Rob extends GatunekRob {
                double ułamekEnergiiRodzica, Plansza plansza, String spisInstrukcji, String początkowyProgram) {
         this.program = początkowyProgram;
         this.energia = początkowaEnergia;
-        super.kosztTury(kosztTury);
-        super.limitPowielania(limitPowielania);
-        super.prPowielenia(prPowielenia);
-        super.prUsunięciaInstrukcji(prUsunięciaInstrukcji);
-        super.prDodaniaInstrukcji(prDodaniaInstrukcji);
-        super.prZmianyInstrukcji(prZmianyInstrukcji);
-        super.ułamekEnergiiRodzica(ułamekEnergiiRodzica);
-        super.plansza(plansza);
-        super.spisInstrukcji(spisInstrukcji);
+        this.kosztTury = kosztTury;
+        this.limitPowielania = limitPowielania;
+        this.prPowielenia = prPowielenia;
+        this.prUsunięciaInstrukcji = prUsunięciaInstrukcji;
+        this.prDodaniaInstrukcji = prDodaniaInstrukcji;
+        this.prZmianyInstrukcji = prZmianyInstrukcji;
+        this.ułamekEnergiiRodzica = ułamekEnergiiRodzica;
+        this.plansza = plansza;
+        this.spisInstrukcji = spisInstrukcji;
         Random r = new Random();
-        współrzędnaX = r.nextInt(super.plansza().liczbaKolumn());
-        współrzędnaY = r.nextInt(super.plansza().liczbaWierszy());
+        współrzędnaX = r.nextInt(plansza.liczbaKolumn());
+        współrzędnaY = r.nextInt(plansza.liczbaWierszy());
         kierunek = r.nextInt(4);
     }
-
-    public Rob(int energia, String program) {
-        this.program = program;
-        this.energia = energia;
-        if (this.energia <= 0) {
-            this.czyŻywy = false;
-        }
-
-        // położenie na planszy
-        Random r = new Random();
-        współrzędnaX = r.nextInt();
-        współrzędnaY = r.nextInt();
-        kierunek = r.nextInt(4);
-    }
-
-    /*public int kierunek() {
-        return kierunek;
-    }
-
-    public int energia() {
-        return energia;
-    }*/
 
     private boolean wylosuj (double prawdopodobieństwo) {
         Random r = new Random();
@@ -67,27 +50,27 @@ public class Rob extends GatunekRob {
 
     public Rob powielSię () {
         //System.out.println("powielanie...");
-        int energiaNowegoRoba = (int) ((double )this.energia * super.ułamekEnergiiRodzica());
+        int energiaNowegoRoba = (int) ((double )this.energia * ułamekEnergiiRodzica);
         this.energia -= energiaNowegoRoba;
         String nowyProgram = program;
-        if (wylosuj(super.prUsunięciaInstrukcji()) && nowyProgram.length() != 0 && super.spisInstrukcji().length() != 0) {
+        if (wylosuj(prUsunięciaInstrukcji) && nowyProgram.length() != 0 && spisInstrukcji.length() != 0) {
             nowyProgram = nowyProgram.substring(0, nowyProgram.length() - 1);
         }
-        if (wylosuj(super.prDodaniaInstrukcji()) && super.spisInstrukcji().length() != 0) {
+        if (wylosuj(prDodaniaInstrukcji) && spisInstrukcji.length() != 0) {
             Random r = new Random();
-            int numerNowejInstrukcji = r.nextInt(super.spisInstrukcji().length());
-            nowyProgram += Character.toString(super.spisInstrukcji().charAt(numerNowejInstrukcji));
+            int numerNowejInstrukcji = r.nextInt(spisInstrukcji.length());
+            nowyProgram += Character.toString(spisInstrukcji.charAt(numerNowejInstrukcji));
         }
-        if (wylosuj(super.prZmianyInstrukcji()) && nowyProgram.length() != 0 && super.spisInstrukcji().length() != 0) {
+        if (wylosuj(prZmianyInstrukcji) && nowyProgram.length() != 0 && spisInstrukcji.length() != 0) {
             Random r = new Random();
-            int numerNowejInstrukcji = r.nextInt(super.spisInstrukcji().length());
+            int numerNowejInstrukcji = r.nextInt(spisInstrukcji.length());
             int numerStarejInstrukcji = r.nextInt(nowyProgram.length());
             nowyProgram = nowyProgram.substring(0, numerStarejInstrukcji) +
-                    super.spisInstrukcji().charAt(numerNowejInstrukcji) +
+                    spisInstrukcji.charAt(numerNowejInstrukcji) +
                     nowyProgram.substring(numerStarejInstrukcji + 1);
         }
-        return new Rob(kosztTury(), limitPowielania(), energiaNowegoRoba, prPowielenia(), prUsunięciaInstrukcji(),
-                prDodaniaInstrukcji(), prZmianyInstrukcji(), ułamekEnergiiRodzica(), plansza(), spisInstrukcji(), nowyProgram);
+        return new Rob(kosztTury, limitPowielania, energiaNowegoRoba, prPowielenia, prUsunięciaInstrukcji,
+                prDodaniaInstrukcji, prZmianyInstrukcji, ułamekEnergiiRodzica, plansza, spisInstrukcji, nowyProgram);
     }
 
     public void lewo() {
@@ -111,71 +94,71 @@ public class Rob extends GatunekRob {
         if (kierunek == 3) { // zachód
             współrzędnaX = współrzędneModulo(-1, 'x');
         }
-        energia += super.plansza().pole(współrzędnaX, współrzędnaY).oddajJedzenie(numerTury);
+        energia += plansza.pole(współrzędnaX, współrzędnaY).oddajJedzenie(numerTury);
         //System.out.println("en" + energia);
     }
 
     public void wąchaj(int numerTury) {
-        if (super.plansza().pole(współrzędneModulo(1, 'x'), współrzędnaY).czyMaJedzenie(numerTury)) {
+        if (plansza.pole(współrzędneModulo(1, 'x'), współrzędnaY).czyMaJedzenie(numerTury)) {
             kierunek = 1;
-        } else if (super.plansza().pole(współrzędneModulo(-1, 'x'), współrzędnaY).czyMaJedzenie(numerTury)) {
+        } else if (plansza.pole(współrzędneModulo(-1, 'x'), współrzędnaY).czyMaJedzenie(numerTury)) {
             kierunek = 3;
-        } else if (super.plansza().pole(współrzędnaX, współrzędneModulo(1, 'y')).czyMaJedzenie(numerTury)) {
+        } else if (plansza.pole(współrzędnaX, współrzędneModulo(1, 'y')).czyMaJedzenie(numerTury)) {
             kierunek = 0;
-        } else if (super.plansza().pole(współrzędnaX, współrzędneModulo(-1, 'y')).czyMaJedzenie(numerTury)) {
+        } else if (plansza.pole(współrzędnaX, współrzędneModulo(-1, 'y')).czyMaJedzenie(numerTury)) {
             kierunek = 2;
         }
     }
 
     private int współrzędneModulo(int liczba, char współrzędna) {
         if (współrzędna == 'x') {
-            if ((współrzędnaX + liczba) % super.plansza().liczbaKolumn() < 0) {
-                //System.out.println("tu " +(współrzędnaX + liczba) % super.plansza().liczbaKolumn() + super.plansza().liczbaKolumn());
-                return (współrzędnaX + liczba) % super.plansza().liczbaKolumn() + super.plansza().liczbaKolumn();
+            if ((współrzędnaX + liczba) % plansza.liczbaKolumn() < 0) {
+                //System.out.println("tu " +(współrzędnaX + liczba) % plansza().liczbaKolumn() + plansza().liczbaKolumn());
+                return (współrzędnaX + liczba) % plansza.liczbaKolumn() + plansza.liczbaKolumn();
             }
-            //System.out.println("tu2 " +(współrzędnaX + liczba) % super.plansza().liczbaKolumn());
-            return (współrzędnaX + liczba) % super.plansza().liczbaKolumn();
+            //System.out.println("tu2 " +(współrzędnaX + liczba) % plansza().liczbaKolumn());
+            return (współrzędnaX + liczba) % plansza.liczbaKolumn();
         }
         if (współrzędna == 'y') {
-            if ((współrzędnaY + liczba) % super.plansza().liczbaWierszy() < 0) {
-                //System.out.println((współrzędnaY + liczba) % super.plansza().liczbaWierszy() + super.plansza().liczbaWierszy());
-                return (współrzędnaY + liczba) % super.plansza().liczbaWierszy() + super.plansza().liczbaWierszy();
+            if ((współrzędnaY + liczba) % plansza.liczbaWierszy() < 0) {
+                //System.out.println((współrzędnaY + liczba) % plansza().liczbaWierszy() + plansza().liczbaWierszy());
+                return (współrzędnaY + liczba) % plansza.liczbaWierszy() + plansza.liczbaWierszy();
             }
-            //System.out.println("tu4 " + (współrzędnaY + liczba) % super.plansza().liczbaWierszy() );
-            return (współrzędnaY + liczba) % super.plansza().liczbaWierszy();
+            //System.out.println("tu4 " + (współrzędnaY + liczba) % plansza().liczbaWierszy() );
+            return (współrzędnaY + liczba) % plansza.liczbaWierszy();
         }
         System.out.println("NIEEEEEEEEEEEEEEEE");
         return współrzędnaX + liczba;
     }
 
     public void jedz(int numerTury) {
-        //System.out.println("kol: " + super.plansza().liczbaKolumn() + " wier: " + super.plansza().liczbaWierszy());
-        if (super.plansza().pole(współrzędneModulo(1, 'x'),
+        //System.out.println("kol: " + plansza().liczbaKolumn() + " wier: " + plansza().liczbaWierszy());
+        if (plansza.pole(współrzędneModulo(1, 'x'),
                 współrzędneModulo(1, 'y')).czyMaJedzenie(numerTury)) {
             współrzędnaX++;
             współrzędnaY++;
-        } else if (super.plansza().pole(współrzędneModulo(1, 'x'),
+        } else if (plansza.pole(współrzędneModulo(1, 'x'),
                 współrzędneModulo(-1, 'y')).czyMaJedzenie(numerTury)) {
             współrzędnaX++;
             współrzędnaY--;
-        } else if (super.plansza().pole(współrzędneModulo(-1, 'x'),
+        } else if (plansza.pole(współrzędneModulo(-1, 'x'),
                 współrzędneModulo(1, 'y')).czyMaJedzenie(numerTury)) {
             współrzędnaX--;
             współrzędnaY++;
-        } else if (super.plansza().pole(współrzędneModulo(-1, 'x'),
+        } else if (plansza.pole(współrzędneModulo(-1, 'x'),
                 współrzędneModulo(-1, 'y')).czyMaJedzenie(numerTury)) {
             współrzędnaX--;
             współrzędnaY--;
-        } else if (super.plansza().pole(współrzędneModulo(1, 'x'),
+        } else if (plansza.pole(współrzędneModulo(1, 'x'),
                 współrzędnaY).czyMaJedzenie(numerTury)) {
             współrzędnaX++;
-        } else if (super.plansza().pole(współrzędnaX,
+        } else if (plansza.pole(współrzędnaX,
                 współrzędneModulo(1, 'y')).czyMaJedzenie(numerTury)) {
             współrzędnaY++;
-        } else if (super.plansza().pole(współrzędneModulo(-1, 'x'),
+        } else if (plansza.pole(współrzędneModulo(-1, 'x'),
                 współrzędnaY).czyMaJedzenie(numerTury)) {
             współrzędnaX--;
-        } else if (super.plansza().pole(współrzędnaX,
+        } else if (plansza.pole(współrzędnaX,
                 współrzędneModulo(-1, 'y')).czyMaJedzenie(numerTury)) {
             współrzędnaY--;
         } else {
@@ -183,36 +166,38 @@ public class Rob extends GatunekRob {
         }
         współrzędnaX = współrzędneModulo(0, 'x');
         współrzędnaY = współrzędneModulo(0, 'y');
-        energia += super.plansza().pole(współrzędnaX, współrzędnaY).oddajJedzenie(numerTury);
+        energia += plansza.pole(współrzędnaX, współrzędnaY).oddajJedzenie(numerTury);
         //System.out.println("en " + energia);
+    }
+
+    public void instrukcja(int numerTury) {
+        if (program.length() == 0 || energia < 1 || numerInstrukcji >= program.length()) {
+            zakończonoProgram = true;
+            numerInstrukcji = 0;
+            return;
+        }
+
+        if (program.charAt(numerInstrukcji) == 'l') lewo();
+        else if (program.charAt(numerInstrukcji) == 'p') prawo();
+        else if (program.charAt(numerInstrukcji) == 'i') idź(numerTury);
+        else if (program.charAt(numerInstrukcji) == 'w') wąchaj(numerTury);
+        else if (program.charAt(numerInstrukcji) == 'j') jedz(numerTury);
+        energia--;
+        numerInstrukcji++;
     }
 
     // metoda zwraca 1 jeśli powstał nowy rob, -1 jeśli obecny rob umarł,
     // 0 w przeciwnym wypadku
-    public int ruch (int numerTury) {
+    public int ruch () {
+        zakończonoProgram = false;
         // spadek energii
-        energia -= super.kosztTury();
+        energia -= kosztTury;
         if (energia < 0) {
-            czyŻywy = false;
             return -1;
         }
 
-        // wykonanie instrukcji
-        if (energia >= 1 && program.length() > 0) { // Rob ma wystarczająco energii na wykonanie instrukcji
-            if (program.charAt(numerInstrukcji) == 'l') lewo();
-            else if (program.charAt(numerInstrukcji) == 'p') prawo();
-            else if (program.charAt(numerInstrukcji) == 'i') idź(numerTury);
-            else if (program.charAt(numerInstrukcji) == 'w') wąchaj(numerTury);
-            else if (program.charAt(numerInstrukcji) == 'j') jedz(numerTury);
-            energia--;
-        }
-        if (program.length() != 0) numerInstrukcji = (numerInstrukcji + 1) % program.length();
-        else {
-            numerInstrukcji = 0;
-        }
-
         // reprodukcja
-        if (wylosuj(super.prPowielenia()) && energia > super.limitPowielania()) {
+        if (wylosuj(prPowielenia) && energia > limitPowielania) {
             return 1;
         }
         return 0;

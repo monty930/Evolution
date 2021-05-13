@@ -96,6 +96,7 @@ public class Parametry {
     public Parametry(File parametryCałkowitePlik) {
         Arrays.fill(parametryCałkowite, -1);
         Arrays.fill(parametryNiecałkowite, -1.);
+
         try {
             int liczbaWierszy = 0;
             Scanner czytajParametry = new Scanner(parametryCałkowitePlik);
@@ -103,6 +104,7 @@ public class Parametry {
                 liczbaWierszy++;
                 String linia = czytajParametry.nextLine();
                 Scanner czytajLinię = new Scanner(linia);
+                czytajLinię.useLocale(Locale.US);
                 if (!czytajLinię.hasNext()) {
                     throw new NiepoprawneDane("Jeden z wierszy w pliku z parametrami jest pusty: linia " + liczbaWierszy + ".");
                 }
@@ -113,15 +115,15 @@ public class Parametry {
                 }
                 int numerParametru = wyszukaj(parametr);
                 if (numerParametru == -1) {
-                    throw new NiepoprawneDane("Błędna nazwa parametru.");
+                    throw new NiepoprawneDane("Błędna nazwa parametru: linia " + liczbaWierszy + ".");
                 }
                 if (numerParametru <= 7) {
                     int wartość = czytajLinię.nextInt();
                     if (wartość < 0) {
-                        throw new NiepoprawneDane("Ujemna wartość parametru.");
+                        throw new NiepoprawneDane("Ujemna wartość parametru: linia " + liczbaWierszy + ".");
                     }
                     if (parametryCałkowite[numerParametru] != -1) {
-                        throw new NiepoprawneDane("Parametr powtarza się.");
+                        throw new NiepoprawneDane("Parametr powtarza się: linia " + liczbaWierszy + ".");
                     }
                     parametryCałkowite[numerParametru] = wartość;
                 }
@@ -129,14 +131,14 @@ public class Parametry {
                     String wartość = czytajLinię.next();
                     if (numerParametru == 8) {
                         if (długośćProgramu != -1) {
-                            throw new NiepoprawneDane("Parametr powtarza się.");
+                            throw new NiepoprawneDane("Parametr powtarza się: linia " + liczbaWierszy + ".");
                         }
                         program = wartość;
                         długośćProgramu = wartość.length();
                     }
                     else {
                         if (długośćSpisu != -1) {
-                            throw new NiepoprawneDane("Parametr powtarza się.");
+                            throw new NiepoprawneDane("Parametr powtarza się: linia " + liczbaWierszy + ".");
                         }
                         spis = wartość;
                         długośćSpisu = wartość.length();
@@ -146,10 +148,10 @@ public class Parametry {
                     double wartość = czytajLinię.nextDouble();
                     if (wartość < 0 || wartość > 1) {
                         throw new NiepoprawneDane("Niepoprawna wartość prawdopodobieństwa" +
-                                " lub ułamku energii rodzica (należy podać wartość z przedziału [0; 1]).");
+                                " lub ułamku energii rodzica: : linia " + liczbaWierszy + ".\nNależy podać wartość z przedziału [0; 1].");
                     }
                     if (parametryNiecałkowite[numerParametru - 10] != -1.) {
-                        throw new NiepoprawneDane("Parametr powtarza się.");
+                        throw new NiepoprawneDane("Parametr powtarza się: linia " + liczbaWierszy + ".");
                     }
                     parametryNiecałkowite[numerParametru - 10] = wartość;
                 }
@@ -161,23 +163,22 @@ public class Parametry {
             }
             if (!czyPoprawneInstrukcje()) {
                 throw new NiepoprawneDane("Niepoprawna litera w początkowym" +
-                        "programie robów.");
+                        "programie robów, w spisie, lub litery w spisie powtarzają się.");
             }
         } catch (FileNotFoundException e) {
             System.out.println("Nie znaleziono pliku z parametrami.\n" +
-                    "Liczba tur ustawiona na 0. Symulacja nie wykona się.");
-            parametryCałkowite[0] = 0;
-        } catch (NiepoprawneDane e) {
-            System.out.println(e.getMessage() + "\nLiczba tur ustawiona na 0. " +
                     "Symulacja nie wykona się.");
-            parametryCałkowite[0] = 0;
+            System.exit(1);
+        } catch (NiepoprawneDane e) {
+            System.out.println(e.getMessage() +
+                    "Symulacja nie wykona się.");
+            System.exit(1);
         } catch (InputMismatchException e) {
-        System.out.println("Niepoprawny typ parametru. Upewnij się, że parametry" +
-                " zmiennoprzecinkowe (prawdopodobiństwa i ułamki)\nzapisane są w notacji" +
-                " polskiej (z przecinkiem, np 0,55)\nLiczba tur ustawiona na 0. " +
-                "Symulacja nie wykona się.");
-        parametryCałkowite[0] = 0;
-    }
+            System.out.println("Niepoprawny typ parametru. Upewnij się, że parametry" +
+                    " zmiennoprzecinkowe (prawdopodobiństwa i ułamki)\nzapisane są w notacji" +
+                    " z kropką, np 0.55.\nSymulacja nie wykona się.");
+            System.exit(1);
+        }
     }
 
     public void wypiszParametry() {

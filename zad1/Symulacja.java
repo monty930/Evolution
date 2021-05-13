@@ -1,32 +1,39 @@
 // Krystyna Gasińska id: 429192, grupa 6.
 // Symulacja ewolucji robów. Projekt 1, Programowanie Obiektowe.
-// Uwagi i modyfikacje:
 
+// Uwagi i modyfikacje:
+//
 // Program zakłada, że wszystkie (liczbowe) parametry są nieujemne.
-// Jeśli tak nie jest, symulacja nie wykona się. Jeśli nie zostanie
-// podany prawidłowy plik z parametrami, lub odczytane z niego dane
-// nie będą poprawne, symulacja nie wykona się (liczba tur zostanie
-// ustawiona na 0). Program początkowy robów i spis dostępnych
-// programów powinien być słowem, w którym litery należą do zbioru
-// {l, p, i, w, j}. Dodatkowo w spisie nie litery nie powinny się
-// powtarzać. Prawdopodobieństwa i ułamek energii rodzica powinny być
-// liczbą zmiennoprzecinkową z przedziału [0; 1], pisaną z przecinkiem
-// (np. 0,53). Jeśli któryś z powyższych warunków nie zostanie
-// spełniony symulacja nie wykona się (liczba tur zostanie ustawiona
-// na 0)
+// Program początkowy robów i spis dostępnych programów powinien być słowem, w którym
+// litery należą do zbioru {l, p, i, w, j}.
+// Dodatkowo w spisie nie litery nie powinny się powtarzać.
+// Litery w programie nie muszą występować w spisie.
+// Prawdopodobieństwa i ułamek energii rodzica powinny być liczbą
+// zmiennoprzecinkową z przedziału [0; 1], pisaną z kropką (np. 0.53).
+// Pozostałe parametry są liczbami całkowitymi.
+//
+// Jeśli któryś z powyższych warunków, lub warunków zadania nie zostanie
+// spełniony, lub nie zostanie podany prawidłowy plik z parametrami
+// symulacja nie wykona się, a program zakończy się kodem 1.
 
 // Uwaga! Jeśli nie zostanie podany prawidłowy plik z planszą lub
 // odczytane z niego dane nie będą poprawne symulacja wykona się z
-// planszą domyślną (umieszczoną w klasie "Plansza"). Poprawność
-// danych oznacza ich zgodność z treścią i warunkami zadania,a także
-// podaną wyżej interpretacją.
+// planszą losową (tworzoną w klasie "Plansza"). Poprawność
+// danych oznacza ich zgodność z treścią i warunkami zadania.
 
 // Jeśli plik z planszą lub parametrami nie zostanie w ogóle podany
 // jako argument przy kompilacji, program zakończy się kodem 1.
 
-// Komunikaty o wszelkich wyjątkach i błędach, przyjęciu domyślnej
-// planszy lub ustawieniu liczby tur na 0, wypisywane są na początku,
+// Komunikaty o przyjęciu domyślnej
+// planszy wypisywane są na początku,
 // przed rozpoczęciem symulacji.
+
+// Każdy Rob wykonuje cały swój program w każdej turze.
+// Roby wykonują: najpierw wszystkie swoją pierwszą instrukcję,
+// potem wszystkie drugą itd. Gdy Roby z krótszymi programami
+// wykonają wszystkie swoje instrukcje nie robią nic, aż do końca
+// tury. Tura kończy się gdy Roby z najdłuższymi instrukcjami
+// skończą je wykonywać.
 
 import java.io.File;
 
@@ -38,7 +45,7 @@ public class Symulacja {
 
     private static void uzupełnijDane(File planszaPlik, File parametryPlik) {
         Parametry parametry = new Parametry(parametryPlik);
-        //parametry.wypiszParametry();
+        parametry.wypiszParametry();
 
         populacja = new Populacja(parametry.początkowaLiczbaRobów(), parametry.kosztTury(),
                 parametry.limitPowielania(), parametry.początkowaEnergia(), parametry.prPowielenia(),
@@ -86,6 +93,7 @@ public class Symulacja {
             System.out.println(e.getMessage());
         }
 
+        // symulacja
         symuluj();
 
         System.out.println("Powiadomienia o błędach podanych plików lub danych (jeśli wystąpiły)" +
