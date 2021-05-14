@@ -9,7 +9,7 @@ public class Parametry {
             {"ile_tur", "pocz_ile_robów", "pocz_energia", "ile_daje_jedzenie",
                     "ile_rośnie_jedzenie", "koszt_tury",
                     "limit_powielania", "co_ile_wypisz", "pocz_progr",
-                    "spis_progr", "ułamek_energii_rodzica", "pr_usunięcia_instr",
+                    "spis_instr", "ułamek_energii_rodzica", "pr_usunięcia_instr",
                     "pr_dodania_instr", "pr_zmiany_instr", "pr_powielenia"};
 
     private int wyszukaj(String parametr) {

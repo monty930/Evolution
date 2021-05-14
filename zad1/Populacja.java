@@ -5,6 +5,16 @@ public class Populacja {
     private int ileUmarło = 0;
     private int ileSięUrodziło;
     private final ArrayList<Rob> roby = new ArrayList<>();
+    private int minimalnaDługośćProgramu = -1;
+    private int maksymalnaDługośćProgramu = -1;
+    private int średniaDługośćProgramu = 0;
+    private int minimalnaEnergia = -1;
+    private int maksymalnaEnergia = -1;
+    private int średniaEnergia = 0;
+    private int minimalnyWiek = -1;
+    private int maksymalnyWiek = -1;
+    private int średniWiek = 0;
+    private int liczbaPólZŻywnością;
 
     public int ileUmarło() {
         return ileUmarło;
@@ -27,13 +37,26 @@ public class Populacja {
             if (początkowaEnergia <= 0) i = ileRobów;
             roby.add(new Rob(kosztTury, limitPowielania, początkowaEnergia, prPowielenia,
                     prUsunięciaInstrukcji, prDodaniaInstrukcji, prZmianyInstrukcji,
-                    ułamekEnergiiRodzica, plansza, spisInstrukcji, początkowyProgram));
+                    ułamekEnergiiRodzica, plansza, spisInstrukcji, początkowyProgram, -1, -1, -1));
         }
+        System.out.println("Raport przed rozpoczęciem Symulacji:");
+        raport(0);
+        System.out.println();
+    }
+
+    private void raport(int numerTury) {
+        System.out.println(numerTury + ", rob: " + ileRobów + ", żyw: " + liczbaPólZŻywnością +
+                ", prg: " + minimalnaDługośćProgramu + "/" + średniaDługośćProgramu + "/" +
+                maksymalnaDługośćProgramu + ", energ: " + minimalnaEnergia + "/" + średniaEnergia +
+                "/" + maksymalnaEnergia + ", wiek: " + minimalnyWiek + "/" + średniWiek +
+                "/" + maksymalnyWiek);
+        // 245, rob: 120, żyw: 340, prg: 3/4.56/78, energ: 1/4.34/26, wiek: 1/12.46/78
     }
 
     // metoda symuluje życie każdego Roba po kolei w danej turze
-    public void Żyj(int numerTury) {
-        int licz = 0;
+    public void tura(int numerTury) {
+        int ileRobówSkończyło = 0;
+        ArrayList<Rob> młodeRoby = new ArrayList<>();
         for (int i = 0; i < roby.size(); i++) {
             int wynikRuchu = roby.get(i).ruch();
             if (wynikRuchu == -1) {
@@ -42,19 +65,20 @@ public class Populacja {
                 ileRobów--;
                 ileUmarło++;
             } else if (wynikRuchu == 1) {
-                roby.add(roby.get(i).powielSię());
+                młodeRoby.add(roby.get(i).powielSię());
                 ileRobów++;
                 ileSięUrodziło++;
             }
         }
-        for (int i = 0; licz < roby.size(); i = (i + 1) % roby.size()) {
-            //System.out.println("i: " + i);
+        for (int i = 0; ileRobówSkończyło < roby.size(); i = (i + 1) % roby.size()) {
             if (!roby.get(i).zakończonoProgram()) {
                 roby.get(i).instrukcja(numerTury);
                 if (roby.get(i).zakończonoProgram()) {
-                    licz++;
+                    ileRobówSkończyło++;
                 }
             }
         }
+
+        roby.addAll(młodeRoby);
     }
 }

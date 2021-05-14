@@ -11,21 +11,27 @@ public class Rob {
     private final int limitPowielania;
     private final double prPowielenia;
     private int numerInstrukcji = 0;
-    private int kierunek; // 0 - północ, 1 - wschód, 2 - południe, 3 - zachód
+    private int kierunek; // 0 - północ (góra), 1 - wschód (prawo),
+                          // 2 - południe (dół), 3 - zachód (lewo)
     private int energia;
     private final String program;
     private int współrzędnaX;
     private int współrzędnaY;
     private boolean zakończonoProgram = false;
+    private int wiek = 0;
+
+    public int wiek() {
+        return wiek;
+    }
 
     public boolean zakończonoProgram() {
         return zakończonoProgram;
     }
 
-    // konstruktor pierwotnego praRoba
     public Rob(int kosztTury, int limitPowielania, int początkowaEnergia, double prPowielenia,
                double prUsunięciaInstrukcji, double prDodaniaInstrukcji, double prZmianyInstrukcji,
-               double ułamekEnergiiRodzica, Plansza plansza, String spisInstrukcji, String początkowyProgram) {
+               double ułamekEnergiiRodzica, Plansza plansza, String spisInstrukcji, String początkowyProgram,
+               int współrzędnaX, int współrzędnaY, int kierunek) {
         this.program = początkowyProgram;
         this.energia = początkowaEnergia;
         this.kosztTury = kosztTury;
@@ -37,19 +43,29 @@ public class Rob {
         this.ułamekEnergiiRodzica = ułamekEnergiiRodzica;
         this.plansza = plansza;
         this.spisInstrukcji = spisInstrukcji;
-        Random r = new Random();
-        współrzędnaX = r.nextInt(plansza.liczbaKolumn());
-        współrzędnaY = r.nextInt(plansza.liczbaWierszy());
-        kierunek = r.nextInt(4);
+
+        // ustalenie losowej pozycji początkowej
+        if (współrzędnaX == -1 || współrzędnaY == -1 || kierunek == -1){
+            Random r = new Random();
+            this.współrzędnaX = r.nextInt(plansza.liczbaKolumn());
+            this.współrzędnaY = r.nextInt(plansza.liczbaWierszy());
+            this.kierunek = r.nextInt(4);
+        } else {
+            this.współrzędnaX = współrzędnaX;
+            this.współrzędnaY = współrzędnaY;
+            this.kierunek = kierunek;
+        }
     }
 
+    // Funkcja z podanym prawdopodobieństwem zwróci wartość true.
     private boolean wylosuj (double prawdopodobieństwo) {
         Random r = new Random();
         return r.nextDouble() <= prawdopodobieństwo;
     }
 
+    // Funkcja tworzy nowego Roba, z nowym programem i energią, zwróconego przeciwnie
+    // niż rodzic, na tym samym polu co on.
     public Rob powielSię () {
-        //System.out.println("powielanie...");
         int energiaNowegoRoba = (int) ((double )this.energia * ułamekEnergiiRodzica);
         this.energia -= energiaNowegoRoba;
         String nowyProgram = program;
@@ -70,7 +86,8 @@ public class Rob {
                     nowyProgram.substring(numerStarejInstrukcji + 1);
         }
         return new Rob(kosztTury, limitPowielania, energiaNowegoRoba, prPowielenia, prUsunięciaInstrukcji,
-                prDodaniaInstrukcji, prZmianyInstrukcji, ułamekEnergiiRodzica, plansza, spisInstrukcji, nowyProgram);
+                prDodaniaInstrukcji, prZmianyInstrukcji, ułamekEnergiiRodzica, plansza, spisInstrukcji, nowyProgram,
+                współrzędnaX, współrzędnaY, (kierunek + 2) % 4);
     }
 
     public void lewo() {
@@ -189,6 +206,7 @@ public class Rob {
     // metoda zwraca 1 jeśli powstał nowy rob, -1 jeśli obecny rob umarł,
     // 0 w przeciwnym wypadku
     public int ruch () {
+        wiek++;
         zakończonoProgram = false;
         // spadek energii
         energia -= kosztTury;

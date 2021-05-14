@@ -45,7 +45,7 @@ public class Symulacja {
 
     private static void uzupełnijDane(File planszaPlik, File parametryPlik) {
         Parametry parametry = new Parametry(parametryPlik);
-        parametry.wypiszParametry();
+        // parametry.wypiszParametry();
 
         populacja = new Populacja(parametry.początkowaLiczbaRobów(), parametry.kosztTury(),
                 parametry.limitPowielania(), parametry.początkowaEnergia(), parametry.prPowielenia(),
@@ -68,7 +68,7 @@ public class Symulacja {
             if (numerTury % coIleWypisz == 0) {
                 System.out.println("wypisanie stanu symulacji... Tura " + numerTury + " liczba robów: " + populacja.ileRobów());
             }
-            populacja.Żyj(numerTury);
+            populacja.tura(numerTury);
         }
         System.out.println("W sumie urodziło się: " + populacja.ileSięUrodziło() + " robów.");
         System.out.println("W sumie umarło: " + populacja.ileUmarło() + " robów.");
@@ -95,8 +95,6 @@ public class Symulacja {
 
         // symulacja
         symuluj();
-
-        System.out.println("Powiadomienia o błędach podanych plików lub danych (jeśli wystąpiły)" +
-                " zostały wypisane przed rozpoczęciem symulacji.");
     }
+
 }
