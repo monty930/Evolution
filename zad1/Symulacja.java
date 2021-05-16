@@ -6,8 +6,8 @@
 // Program zakłada, że wszystkie (liczbowe) parametry są nieujemne.
 // Program początkowy robów i spis dostępnych programów powinien być słowem, w którym
 // litery należą do zbioru {l, p, i, w, j}.
-// Dodatkowo w spisie nie litery nie powinny się powtarzać.
-// Litery w programie nie muszą występować w spisie.
+// Dodatkowo w spisie litery nie powinny się powtarzać.
+// Litery w początkowym programie nie muszą występować w spisie.
 // Prawdopodobieństwa i ułamek energii rodzica powinny być liczbą
 // zmiennoprzecinkową z przedziału [0; 1], pisaną z kropką (np. 0.53).
 // Pozostałe parametry są liczbami całkowitymi.
@@ -24,15 +24,15 @@
 // Jeśli plik z planszą lub parametrami nie zostanie w ogóle podany
 // jako argument przy kompilacji, program zakończy się kodem 1.
 
-// Komunikaty o przyjęciu domyślnej
-// planszy wypisywane są na początku,
+// Komunikat o przyjęciu domyślnej
+// planszy (jeśli wystąpi) wypisywane są na początku,
 // przed rozpoczęciem symulacji.
 
 // Każdy Rob wykonuje cały swój program w każdej turze.
 // Roby wykonują: najpierw wszystkie swoją pierwszą instrukcję,
 // potem wszystkie drugą itd. Gdy Roby z krótszymi programami
 // wykonają wszystkie swoje instrukcje nie robią nic, aż do końca
-// tury. Tura kończy się gdy Roby z najdłuższymi instrukcjami
+// tury. Tura kończy się gdy Roby z najdłuższymi programami
 // skończą je wykonywać.
 
 import java.io.File;
@@ -65,10 +65,10 @@ public class Symulacja {
         }
         while (numerTury < ileTur) {
             numerTury++;
+            populacja.tura(numerTury);
             if (numerTury % coIleWypisz == 0) {
                 System.out.println("wypisanie stanu symulacji... Tura " + numerTury + " liczba robów: " + populacja.ileRobów());
             }
-            populacja.tura(numerTury);
         }
         System.out.println("W sumie urodziło się: " + populacja.ileSięUrodziło() + " robów.");
         System.out.println("W sumie umarło: " + populacja.ileUmarło() + " robów.");

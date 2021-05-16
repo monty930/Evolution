@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-// klasa obsługująca podane w pliku parametry. Sprawdza ich poprawność i
+// Klasa obsługująca podane w pliku parametry. Sprawdza ich poprawność i
 // przechowuje ich wartości.
 public class Parametry {
     private final String[] parametrySpis =

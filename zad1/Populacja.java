@@ -57,6 +57,7 @@ public class Populacja {
     public void tura(int numerTury) {
         int ileRobówSkończyło = 0;
         ArrayList<Rob> młodeRoby = new ArrayList<>();
+
         for (int i = 0; i < roby.size(); i++) {
             int wynikRuchu = roby.get(i).ruch();
             if (wynikRuchu == -1) {

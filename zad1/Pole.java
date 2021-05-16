@@ -1,8 +1,8 @@
 public class Pole {
-    int ileRośnieJedzenie;
-    int ileDajeJedzenie;
-    boolean czyŻywieniowe;
-    int kiedyZjedzone; // numer tury
+    private final int ileRośnieJedzenie;
+    private final int ileDajeJedzenie;
+    private final boolean czyŻywieniowe;
+    private int kiedyZjedzone; // numer tury
 
     public boolean czyMaJedzenie(int numerTury) {
         return czyŻywieniowe && kiedyZjedzone + ileRośnieJedzenie <= numerTury;
